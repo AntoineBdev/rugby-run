@@ -5,7 +5,7 @@ let boardHeight = 250;
 let context;
 let terrainImg;
 
-// player
+// perso
 let persoWidth = 88;
 let persoHeight = 94;
 let persoX = 50;
@@ -20,7 +20,7 @@ let perso = {
     height: persoHeight
 }
 
-// neutral player
+// états du perso
 let isSauting = false;
 let isPlonging = false;
 let plongeTimer = 0;
@@ -29,11 +29,11 @@ let plongeTimer = 0;
 let rmArray = [];
 let rm1Width = 40;
 let rmHeight = 40;
-let rmX = 700;
+let rmX = 750;
 let rmY = boardHeight - rmHeight;
 let rm1Img;
 
-// ball
+// ballon
 let ballonArray = [];
 let ballonWidth = 30;
 let ballonHeight = 30;
@@ -45,8 +45,14 @@ let velocityY = 0;
 let gravity = .4;
 let gameOver = false;
 let score = 0;
+let obstacleInterval = null;
+let animationId = null; // ✅ pour stopper requestAnimationFrame
 
-window.onload = function () {
+function startGame(niveau) {
+    if (niveau == 1) { velocityX = -5; }
+    if (niveau == 2) { velocityX = -8; }
+    if (niveau == 3) { velocityX = -12; }
+
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
@@ -67,37 +73,18 @@ window.onload = function () {
     ballonImg = new Image();
     ballonImg.src = "ballon.jpg";
 
-    requestAnimationFrame(update);
-    setInterval(placeObstacle, 1500); // obstacles
+    resetGame();
+
+    // ✅ stoppe les anciens intervalles avant d'en créer de nouveaux
+    if (obstacleInterval) { clearInterval(obstacleInterval); }
+    if (animationId) { cancelAnimationFrame(animationId); }
+
+    obstacleInterval = setInterval(placeObstacle, 1500);
     document.addEventListener("keydown", handleKey);
-}
-
-function handleKey(e) {
-    // ✅ relance la partie si game over
-    if (gameOver) {
-        if (e.code == "Space" || e.code == "Enter") {
-            resetGame();
-        }
-        return;
-    }
-
-    // jump over rugbymen
-    if (e.code == "Enter" && !isSauting && perso.y == persoY) {
-        isSauting = true;
-        isPlonging = false;
-        velocityY = -10;
-    }
-
-    // diving under ball
-    if (e.code == "Space" && !isPlonging && perso.y == persoY) {
-        isPlonging = true;
-        isSauting = false;
-        plongeTimer = 40; // diving time per frame
-    }
+    animationId = requestAnimationFrame(update);
 }
 
 function resetGame() {
-    // remet tout à zéro
     gameOver = false;
     score = 0;
     rmArray = [];
@@ -109,10 +96,37 @@ function resetGame() {
     plongeTimer = 0;
 }
 
+function handleKey(e) {
+    if (gameOver) {
+        if (e.code == "Space" || e.code == "Enter") {
+            clearInterval(obstacleInterval);
+            cancelAnimationFrame(animationId); // ✅ stoppe l'animation
+            document.removeEventListener("keydown", handleKey);
+            window.location.href = "menu.html";
+        }
+        return;
+    }
+
+    if (e.code == "Enter" && !isSauting && perso.y == persoY) {
+        isSauting = true;
+        isPlonging = false;
+        velocityY = -10;
+    }
+
+    if (e.code == "Space" && !isPlonging && perso.y == persoY) {
+        isPlonging = true;
+        isSauting = false;
+        plongeTimer = 40;
+    }
+}
+
 function update() {
-    requestAnimationFrame(update);
+    console.log("update")
+    animationId = requestAnimationFrame(update); // ✅ stocke l'id à chaque frame
 
     if (gameOver) {
+        context.fillStyle = "rgba(0,0,0,0.5)"; // ✅ fond semi-transparent
+        context.fillRect(0, 0, boardWidth, boardHeight);
         context.fillStyle = "red";
         context.font = "40px courier";
         context.fillText("GAME OVER", boardWidth / 2 - 100, boardHeight / 2);
@@ -121,22 +135,20 @@ function update() {
         context.fillText("Score : " + Math.floor(score / 10), boardWidth / 2 - 70, boardHeight / 2 + 40);
         context.fillStyle = "yellow";
         context.font = "16px courier";
-        context.fillText("Appuie sur ESPACE ou ENTREE pour rejouer", boardWidth / 2 - 170, boardHeight / 2 + 80);
+        context.fillText("ESPACE ou ENTREE pour revenir au menu", boardWidth / 2 - 170, boardHeight / 2 + 75);
         return;
-}
+    }
 
     context.clearRect(0, 0, board.width, board.height);
     context.drawImage(terrainImg, 0, 0, boardWidth, boardHeight);
 
-    // dive
+    // plongeon timer
     if (isPlonging) {
         plongeTimer--;
-        if (plongeTimer <= 0) {
-            isPlonging = false;
-        }
+        if (plongeTimer <= 0) { isPlonging = false; }
     }
 
-    // jump
+    // saut
     if (isSauting) {
         velocityY += gravity;
         perso.y = Math.min(perso.y + velocityY, persoY);
@@ -146,47 +158,39 @@ function update() {
         }
     }
 
-    // player images
+    // dessin perso
     if (isPlonging) {
-    context.drawImage(persoPlongeImg, perso.x, persoY + 40, perso.width * 1.5, perso.height * 0.5);
-} else {
-    context.drawImage(persoImg, perso.x, perso.y, perso.width, perso.height);
-}
+        context.drawImage(persoPlongeImg, perso.x, persoY + 40, perso.width * 1.5, perso.height * 0.5);
+    } else {
+        context.drawImage(persoImg, perso.x, perso.y, perso.width, perso.height);
+    }
 
-    // collision rugbymen 
+    // hitbox
+    let persoActuel = isPlonging
+        ? { x: perso.x, y: persoY + 40, width: perso.width * 1.5, height: perso.height * 0.5 }
+        : { x: perso.x, y: perso.y, width: perso.width, height: perso.height };
+
+    // rugbymen
     for (let i = 0; i < rmArray.length; i++) {
         let rm = rmArray[i];
         rm.x += velocityX;
         context.drawImage(rm.img, rm.x, rm.y, rm.width, rm.height);
-
-        let persoActuel = isPlonging
-            ? { x: perso.x, y: persoY + 30, width: perso.width * 1.5, height: perso.height * 0.5 }
-            : { x: perso.x, y: perso.y, width: perso.width, height: perso.height };
-
         if (detectCollision(persoActuel, rm)) {
             gameOver = true;
+            clearInterval(obstacleInterval); // ✅ stoppe les obstacles
         }
     }
 
-    // collision ball
+    // ballons
     for (let i = 0; i < ballonArray.length; i++) {
         let ballon = ballonArray[i];
         ballon.x += ballon.velocityX;
         context.drawImage(ballon.img, ballon.x, ballon.y, ballon.width, ballon.height);
-
-        let persoActuel = isPlonging
-            ? { x: perso.x, y: persoY + 30, width: perso.width * 1.5, height: perso.height * 0.5 }
-            : { x: perso.x, y: perso.y, width: perso.width, height: perso.height };
-
         if (detectCollision(persoActuel, ballon)) {
             gameOver = true;
+            clearInterval(obstacleInterval); // ✅ stoppe les obstacles
         }
     }
-
-    // rules
-    context.fillStyle = "white";
-    context.font = "14px courier";
-    context.fillText("ENTREE = sauter | ESPACE = plonger", boardWidth / 2 - 130, 20);
 
     // score
     context.fillStyle = "black";
@@ -198,9 +202,7 @@ function update() {
 function placeObstacle() {
     if (gameOver) { return; }
 
-
     if (Math.random() > 0.5) {
-
         let rm = {
             img: rm1Img,
             x: rmX,
@@ -210,19 +212,18 @@ function placeObstacle() {
         }
         rmArray.push(rm);
         if (rmArray.length > 5) { rmArray.shift(); }
-
     } else {
-    let ballon = {
-        img: ballonImg,
-        x: boardWidth,
-        y: persoY ,
-        width: ballonWidth,
-        height: ballonHeight,
-        velocityX: -8
+        let ballon = {
+            img: ballonImg,
+            x: boardWidth,
+            y: persoY - 20, // ✅ hauteur de tête
+            width: ballonWidth,
+            height: ballonHeight,
+            velocityX: velocityX
+        }
+        ballonArray.push(ballon);
+        if (ballonArray.length > 5) { ballonArray.shift(); }
     }
-    ballonArray.push(ballon);
-    if (ballonArray.length > 5) { ballonArray.shift(); }
-}
 }
 
 function detectCollision(a, b) {

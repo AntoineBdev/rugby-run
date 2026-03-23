@@ -1,0 +1,86 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #222;
+    font-family: courier, monospace;
+}
+
+/* menu */
+#menu {
+    text-align: center;
+    color: white;
+}
+
+#menu h1 {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+#menu p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    color: yellow;
+}
+
+/* ✅ vrais sélecteurs CSS avec . */
+.btn-niveau {
+    display: block;
+    margin: 10px auto;
+    padding: 15px 40px;
+    font-size: 20px;
+    font-family: courier, monospace;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 250px;
+    transition: transform 0.1s;
+}
+
+.facile { background-color: lightgreen; }
+.moyen  { background-color: orange; }
+.difficile { background-color: tomato; color: white; }
+
+.btn-niveau:hover {
+    transform: scale(1.05);
+}
+
+/* bouton menu dans le jeu */
+.btn-menu {
+    margin-top: 10px;
+    padding: 8px 20px;
+    font-size: 16px;
+    font-family: courier, monospace;
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-menu:hover {
+    background-color: lightgray;
+}
+
+/* jeu */
+#gameContainer {
+    text-align: center;
+}
+
+canvas {
+    border: 2px solid white;
+    display: block;
+    margin: auto;
+}
+
+#instructions {
+    color: white;
+    margin-top: 10px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
