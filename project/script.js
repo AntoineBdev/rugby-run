@@ -1,6 +1,6 @@
 // board
 let board;
-let boardWidth = 750;
+let boardWidth = 800;
 let boardHeight = 250;
 let context;
 let terrainImg;
