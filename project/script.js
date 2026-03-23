@@ -1,6 +1,6 @@
 // board
 let board;
-let boardWidth = 750;
+let boardWidth = 650;
 let boardHeight = 250;
 let context;
 let terrainImg;
@@ -46,7 +46,7 @@ let gravity = .4;
 let gameOver = false;
 let score = 0;
 let obstacleInterval = null;
-let animationId = null; // ✅ pour stopper requestAnimationFrame
+let animationId = null; //
 
 function startGame(niveau) {
     if (niveau == 1) { velocityX = -5; }
@@ -75,7 +75,6 @@ function startGame(niveau) {
 
     resetGame();
 
-    // ✅ stoppe les anciens intervalles avant d'en créer de nouveaux
     if (obstacleInterval) { clearInterval(obstacleInterval); }
     if (animationId) { cancelAnimationFrame(animationId); }
 
@@ -100,7 +99,7 @@ function handleKey(e) {
     if (gameOver) {
         if (e.code == "Space" || e.code == "Enter") {
             clearInterval(obstacleInterval);
-            cancelAnimationFrame(animationId); // ✅ stoppe l'animation
+            cancelAnimationFrame(animationId); // stop
             document.removeEventListener("keydown", handleKey);
             window.location.href = "menu.html";
         }
@@ -122,10 +121,9 @@ function handleKey(e) {
 
 function update() {
     console.log("update")
-    animationId = requestAnimationFrame(update); // ✅ stocke l'id à chaque frame
-
+    animationId = requestAnimationFrame(update); // frame
     if (gameOver) {
-        context.fillStyle = "rgba(0,0,0,0.5)"; // ✅ fond semi-transparent
+        context.fillStyle = "rgba(0,0,0,0.5)"; // 
         context.fillRect(0, 0, boardWidth, boardHeight);
         context.fillStyle = "red";
         context.font = "40px courier";
@@ -177,7 +175,7 @@ function update() {
         context.drawImage(rm.img, rm.x, rm.y, rm.width, rm.height);
         if (detectCollision(persoActuel, rm)) {
             gameOver = true;
-            clearInterval(obstacleInterval); // ✅ stoppe les obstacles
+            clearInterval(obstacleInterval); // stop
         }
     }
 
@@ -188,7 +186,7 @@ function update() {
         context.drawImage(ballon.img, ballon.x, ballon.y, ballon.width, ballon.height);
         if (detectCollision(persoActuel, ballon)) {
             gameOver = true;
-            clearInterval(obstacleInterval); // ✅ stoppe les obstacles
+            clearInterval(obstacleInterval); // stop
         }
     }
 
@@ -216,7 +214,7 @@ function placeObstacle() {
         let ballon = {
             img: ballonImg,
             x: boardWidth,
-            y: persoY - 20, // ✅ hauteur de tête
+            y: persoY - 20, // hauteur
             width: ballonWidth,
             height: ballonHeight,
             velocityX: velocityX
