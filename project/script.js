@@ -49,9 +49,9 @@ let obstacleInterval = null;
 let animationId = null; // ✅ pour stopper requestAnimationFrame
 
 function startGame(niveau) {
-    if (niveau == 1) { velocityX = -5; }
-    if (niveau == 2) { velocityX = -8; }
-    if (niveau == 3) { velocityX = -12; }
+    if (niveau === 1) { velocityX = -5; }
+    if (niveau === 2) { velocityX = -8; }
+    if (niveau === 3) { velocityX = -12; }
 
     board = document.getElementById("board");
     board.height = boardHeight;
@@ -98,7 +98,7 @@ function resetGame() {
 
 function handleKey(e) {
     if (gameOver) {
-        if (e.code == "Escape") {
+        if (e.code === "Escape") {
             clearTimeout(obstacleInterval);
             cancelAnimationFrame(animationId); // ✅ stoppe l'animation
             document.removeEventListener("keydown", handleKey);
@@ -107,20 +107,20 @@ function handleKey(e) {
         return;
     }
 
-    if (e.code == "ArrowUp" && !isSauting && perso.y == persoY) {
+    if (e.code === "ArrowUp" && !isSauting && perso.y === persoY) {
         isSauting = true;
         isPlonging = false;
         velocityY = -10;
     }
 
-    if (e.code == "ArrowDown" && !isPlonging && perso.y == persoY) {
+    if (e.code === "ArrowDown" && !isPlonging && perso.y === persoY) {
         isPlonging = true;
         isSauting = false;
     }
 }
 
 document.addEventListener("keyup", function(e) {
-    if (e.code == "ArrowDown") { isPlonging = false; }
+    if (e.code === "ArrowDown") { isPlonging = false; }
 });
 
 function update() {
@@ -149,7 +149,7 @@ function update() {
     if (isSauting) {
         velocityY += gravity;
         perso.y = Math.min(perso.y + velocityY, persoY);
-        if (perso.y == persoY) {
+        if (perso.y === persoY) {
             isSauting = false;
             velocityY = 0;
         }
