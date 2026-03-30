@@ -76,10 +76,10 @@ function startGame(niveau) {
     resetGame();
 
     // ✅ stoppe les anciens intervalles avant d'en créer de nouveaux
-    if (obstacleInterval) { clearInterval(obstacleInterval); }
+    if (obstacleInterval) { clearTimeout(obstacleInterval); }
     if (animationId) { cancelAnimationFrame(animationId); }
 
-    obstacleInterval = setInterval(placeObstacle, 1500);
+    scheduleObstacle();
     document.addEventListener("keydown", handleKey);
     animationId = requestAnimationFrame(update);
 }
@@ -98,8 +98,8 @@ function resetGame() {
 
 function handleKey(e) {
     if (gameOver) {
-        if (e.code == "Space" || e.code == "Enter") {
-            clearInterval(obstacleInterval);
+        if (e.code == "Escape") {
+            clearTimeout(obstacleInterval);
             cancelAnimationFrame(animationId); // ✅ stoppe l'animation
             document.removeEventListener("keydown", handleKey);
             window.location.href = "menu.html";
@@ -107,18 +107,21 @@ function handleKey(e) {
         return;
     }
 
-    if (e.code == "Enter" && !isSauting && perso.y == persoY) {
+    if (e.code == "ArrowUp" && !isSauting && perso.y == persoY) {
         isSauting = true;
         isPlonging = false;
         velocityY = -10;
     }
 
-    if (e.code == "Space" && !isPlonging && perso.y == persoY) {
+    if (e.code == "ArrowDown" && !isPlonging && perso.y == persoY) {
         isPlonging = true;
         isSauting = false;
-        plongeTimer = 40;
     }
 }
+
+document.addEventListener("keyup", function(e) {
+    if (e.code == "ArrowDown") { isPlonging = false; }
+});
 
 function update() {
     console.log("update")
@@ -135,18 +138,12 @@ function update() {
         context.fillText("Score : " + Math.floor(score / 10), boardWidth / 2 - 70, boardHeight / 2 + 40);
         context.fillStyle = "yellow";
         context.font = "16px courier";
-        context.fillText("ESPACE ou ENTREE pour revenir au menu", boardWidth / 2 - 170, boardHeight / 2 + 75);
+        context.fillText("ECHAP pour revenir au menu", boardWidth / 2 - 120, boardHeight / 2 + 75);
         return;
     }
 
     context.clearRect(0, 0, board.width, board.height);
     context.drawImage(terrainImg, 0, 0, boardWidth, boardHeight);
-
-    // plongeon timer
-    if (isPlonging) {
-        plongeTimer--;
-        if (plongeTimer <= 0) { isPlonging = false; }
-    }
 
     // saut
     if (isSauting) {
@@ -177,7 +174,7 @@ function update() {
         context.drawImage(rm.img, rm.x, rm.y, rm.width, rm.height);
         if (detectCollision(persoActuel, rm)) {
             gameOver = true;
-            clearInterval(obstacleInterval); // ✅ stoppe les obstacles
+            clearTimeout(obstacleInterval); // ✅ stoppe les obstacles
         }
     }
 
@@ -188,7 +185,7 @@ function update() {
         context.drawImage(ballon.img, ballon.x, ballon.y, ballon.width, ballon.height);
         if (detectCollision(persoActuel, ballon)) {
             gameOver = true;
-            clearInterval(obstacleInterval); // ✅ stoppe les obstacles
+            clearTimeout(obstacleInterval); // ✅ stoppe les obstacles
         }
     }
 
@@ -197,6 +194,16 @@ function update() {
     context.font = "20px courier";
     score++;
     context.fillText("Score : " + Math.floor(score / 10), 5, 20);
+}
+
+function scheduleObstacle() {
+    let randomDelay = Math.random() * 1000 + 800;
+    obstacleInterval = setTimeout(function() {
+        if (!gameOver) {
+            placeObstacle();
+            scheduleObstacle();
+        }
+    }, randomDelay);
 }
 
 function placeObstacle() {
