@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25d51bde-4895-41a8-86e4-6c0019bfc3db" name="Changes" comment="test">
+    <list default="true" id="25d51bde-4895-41a8-86e4-6c0019bfc3db" name="Changes" comment="Fix bug glissade&#10;Touche fleche plus logique">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/level1.html" beforeDir="false" afterPath="$PROJECT_DIR$/project/level1.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/project/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,9 +85,25 @@
       <updated>1774361039160</updated>
       <workItem from="1774361040197" duration="8000" />
       <workItem from="1774722930872" duration="53000" />
-      <workItem from="1774878540566" duration="3672000" />
+      <workItem from="1774878540566" duration="6944000" />
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fix bug glissade&#10;Touche fleche plus logique">
+      <option name="closed" value="true" />
+      <created>1774883765797</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774883765797</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fix bug glissade&#10;Touche fleche plus logique">
+      <option name="closed" value="true" />
+      <created>1774883891730</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1774883891730</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -94,6 +111,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="Fix bug glissade&#10;Touche fleche plus logique" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix bug glissade&#10;Touche fleche plus logique" />
   </component>
 </project>

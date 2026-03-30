@@ -49,40 +49,32 @@ let obstacleInterval = null;
 let animationId = null; // ✅ pour stopper requestAnimationFrame
 
 function startGame(niveau) {
-    if (niveau === 1) { velocityX = -5; }
-    if (niveau === 2) { velocityX = -8; }
-    if (niveau === 3) { velocityX = -12; }
-
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
     context = board.getContext("2d");
 
-    terrainImg = new Image();
-    terrainImg.src = "terrain.jpg";
-
-    persoImg = new Image();
-    persoImg.src = "perso.jpg";
-
-    persoPlongeImg = new Image();
-    persoPlongeImg.src = "plonge.jpg";
-
-    rm1Img = new Image();
-    rm1Img.src = "rm1.jpg";
-
-    ballonImg = new Image();
-    ballonImg.src = "ballon.jpg";
+    terrainImg = new Image(); terrainImg.src = "terrain.jpg";
+    persoImg = new Image(); persoImg.src = "perso.jpg";
+    persoPlongeImg = new Image(); persoPlongeImg.src = "plonge.jpg";
+    rm1Img = new Image(); rm1Img.src = "rm1.jpg";
+    ballonImg = new Image(); ballonImg.src = "ballon.jpg";
 
     resetGame();
-
-    // ✅ stoppe les anciens intervalles avant d'en créer de nouveaux
     if (obstacleInterval) { clearTimeout(obstacleInterval); }
     if (animationId) { cancelAnimationFrame(animationId); }
 
-    scheduleObstacle();
+    if (niveau === 1) startLevel1();
+    else if (niveau === 2) startLevel2();
+    else if (niveau === 3) startLevel3();
+
     document.addEventListener("keydown", handleKey);
     animationId = requestAnimationFrame(update);
 }
+
+function startLevel1() { velocityX = -5; scheduleObstacle(placeRm); }
+function startLevel2() { velocityX = -5; scheduleObstacle(placeBallon); }
+function startLevel3() { velocityX = -5; scheduleObstacle(placeMix); }
 
 function resetGame() {
     gameOver = false;
@@ -99,8 +91,9 @@ function resetGame() {
 function handleKey(e) {
     if (gameOver) {
         if (e.code === "Escape") {
+            e.preventDefault();
             clearTimeout(obstacleInterval);
-            cancelAnimationFrame(animationId); // ✅ stoppe l'animation
+            cancelAnimationFrame(animationId);
             document.removeEventListener("keydown", handleKey);
             window.location.href = "menu.html";
         }
@@ -124,11 +117,10 @@ document.addEventListener("keyup", function(e) {
 });
 
 function update() {
-    console.log("update")
-    animationId = requestAnimationFrame(update); // ✅ stocke l'id à chaque frame
+    animationId = requestAnimationFrame(update);
 
     if (gameOver) {
-        context.fillStyle = "rgba(0,0,0,0.5)"; // ✅ fond semi-transparent
+        context.fillStyle = "rgba(0,0,0,0.5)";
         context.fillRect(0, 0, boardWidth, boardHeight);
         context.fillStyle = "red";
         context.font = "40px courier";
@@ -196,41 +188,32 @@ function update() {
     context.fillText("Score : " + Math.floor(score / 10), 5, 20);
 }
 
-function scheduleObstacle() {
+function scheduleObstacle(placeFn) {
     let randomDelay = Math.random() * 1000 + 800;
     obstacleInterval = setTimeout(function() {
         if (!gameOver) {
-            placeObstacle();
-            scheduleObstacle();
+            placeFn();
+            scheduleObstacle(placeFn);
         }
     }, randomDelay);
 }
 
-function placeObstacle() {
+function placeRm() {
     if (gameOver) { return; }
+    let rm = { img: rm1Img, x: rmX, y: rmY, width: rm1Width, height: rmHeight };
+    rmArray.push(rm);
+    if (rmArray.length > 5) { rmArray.shift(); }
+}
 
-    if (Math.random() > 0.5) {
-        let rm = {
-            img: rm1Img,
-            x: rmX,
-            y: rmY,
-            width: rm1Width,
-            height: rmHeight
-        }
-        rmArray.push(rm);
-        if (rmArray.length > 5) { rmArray.shift(); }
-    } else {
-        let ballon = {
-            img: ballonImg,
-            x: boardWidth,
-            y: persoY - 20, // ✅ hauteur de tête
-            width: ballonWidth,
-            height: ballonHeight,
-            velocityX: velocityX
-        }
-        ballonArray.push(ballon);
-        if (ballonArray.length > 5) { ballonArray.shift(); }
-    }
+function placeBallon() {
+    if (gameOver) { return; }
+    let ballon = { img: ballonImg, x: boardWidth, y: persoY - 20, width: ballonWidth, height: ballonHeight, velocityX: velocityX };
+    ballonArray.push(ballon);
+    if (ballonArray.length > 5) { ballonArray.shift(); }
+}
+
+function placeMix() {
+    if (Math.random() > 0.5) { placeRm(); } else { placeBallon(); }
 }
 
 function detectCollision(a, b) {
