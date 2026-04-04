@@ -1,17 +1,19 @@
 // board
 let board;
-let boardWidth = 800;
-let boardHeight = 250;
+let boardWidth = 1000;
+let boardHeight = 400;
 let context;
 let terrainImg;
+let bgX = 0;
 
 // perso
 let persoWidth = 88;
 let persoHeight = 94;
 let persoX = 50;
 let persoY = boardHeight - persoHeight;
-let persoImg;
-let persoPlongeImg;
+let persoRunImg1, persoRunImg2, persoJumpImg, persoDiveImg;
+let runFrame = 0;
+let runTimer = 0;
 
 let perso = {
     x: persoX,
@@ -27,16 +29,16 @@ let plongeTimer = 0;
 
 // rugbyman
 let rmArray = [];
-let rm1Width = 40;
-let rmHeight = 40;
-let rmX = 750;
+let rm1Width = 70;
+let rmHeight = 100;
+let rmX = boardWidth;
 let rmY = boardHeight - rmHeight;
 let rm1Img;
 
 // ballon
 let ballonArray = [];
-let ballonWidth = 30;
-let ballonHeight = 30;
+let ballonWidth = 60;
+let ballonHeight = 40;
 let ballonImg;
 
 // physics
@@ -54,11 +56,19 @@ function startGame(niveau) {
     board.width = boardWidth;
     context = board.getContext("2d");
 
-    terrainImg = new Image(); terrainImg.src = "terrain.jpg";
-    persoImg = new Image(); persoImg.src = "perso.jpg";
-    persoPlongeImg = new Image(); persoPlongeImg.src = "plonge.jpg";
-    rm1Img = new Image(); rm1Img.src = "rm1.jpg";
-    ballonImg = new Image(); ballonImg.src = "ballon.jpg";
+    terrainImg = new Image(); terrainImg.src = "StadeBG.png";
+    persoRunImg1 = new Image(); persoRunImg1.src = "runingPlayer1.png";
+    persoRunImg2 = new Image(); persoRunImg2.src = "runingPlayer2.png";
+    persoJumpImg = new Image(); persoJumpImg.src = "JumpingPlayer.png";
+    persoDiveImg = new Image(); persoDiveImg.src = "DivingPlayer.png";
+    ballonImg = new Image(); ballonImg.src = "rugbyBall.png";
+
+    let v = parseFloat(localStorage.getItem('velocite')) || -5;
+    velocityX = v;
+    rm1Img = new Image();
+    if (v === -5)      rm1Img.src = "CastreRB.png";
+    else if (v === -8) rm1Img.src = "LarochelleRM.png";
+    else               rm1Img.src = "BordeauBG.png";
 
     resetGame();
     if (obstacleInterval) { clearTimeout(obstacleInterval); }
@@ -72,9 +82,9 @@ function startGame(niveau) {
     animationId = requestAnimationFrame(update);
 }
 
-function startLevel1() { velocityX = -5; scheduleObstacle(placeRm); }
-function startLevel2() { velocityX = -5; scheduleObstacle(placeBallon); }
-function startLevel3() { velocityX = -5; scheduleObstacle(placeMix); }
+function startLevel1() { scheduleObstacle(placeRm); }
+function startLevel2() { scheduleObstacle(placeBallon); }
+function startLevel3() { scheduleObstacle(placeMix); }
 
 function resetGame() {
     gameOver = false;
@@ -86,6 +96,9 @@ function resetGame() {
     isSauting = false;
     isPlonging = false;
     plongeTimer = 0;
+    runFrame = 0;
+    runTimer = 0;
+    bgX = 0;
 }
 
 function handleKey(e) {
@@ -103,7 +116,7 @@ function handleKey(e) {
     if (e.code === "ArrowUp" && !isSauting && perso.y === persoY) {
         isSauting = true;
         isPlonging = false;
-        velocityY = -10;
+        velocityY = -12;
     }
 
     if (e.code === "ArrowDown" && !isPlonging && perso.y === persoY) {
@@ -135,7 +148,10 @@ function update() {
     }
 
     context.clearRect(0, 0, board.width, board.height);
-    context.drawImage(terrainImg, 0, 0, boardWidth, boardHeight);
+    bgX -= 2;
+    if (bgX <= -2000) bgX = 0;
+    context.drawImage(terrainImg, bgX, 0, 2000, boardHeight);
+    context.drawImage(terrainImg, bgX + 2000, 0, 2000, boardHeight);
 
     // saut
     if (isSauting) {
@@ -149,24 +165,34 @@ function update() {
 
     // dessin perso
     if (isPlonging) {
-        context.drawImage(persoPlongeImg, perso.x, persoY + 40, perso.width * 1.5, perso.height * 0.5);
+        context.drawImage(persoDiveImg, perso.x, boardHeight - 42, 113, 42);
+    } else if (isSauting) {
+        context.drawImage(persoJumpImg, perso.x, perso.y, 42, 113);
     } else {
-        context.drawImage(persoImg, perso.x, perso.y, perso.width, perso.height);
+        runTimer++;
+        if (runTimer >= 10) { runFrame = runFrame === 0 ? 1 : 0; runTimer = 0; }
+        context.drawImage(runFrame === 0 ? persoRunImg1 : persoRunImg2, perso.x, perso.y, perso.width, perso.height);
     }
 
-    // hitbox
-    let persoActuel = isPlonging
-        ? { x: perso.x, y: persoY + 40, width: perso.width * 1.5, height: perso.height * 0.5 }
-        : { x: perso.x, y: perso.y, width: perso.width, height: perso.height };
+    // hitbox perso selon état
+    let persoActuel;
+    if (isPlonging) {
+        persoActuel = { x: perso.x, y: boardHeight - 42, width: 113, height: 42 };
+    } else if (isSauting) {
+        persoActuel = { x: perso.x, y: perso.y, width: 42, height: 113 };
+    } else {
+        persoActuel = { x: perso.x, y: perso.y, width: perso.width, height: perso.height };
+    }
 
     // rugbymen
     for (let i = 0; i < rmArray.length; i++) {
         let rm = rmArray[i];
         rm.x += velocityX;
         context.drawImage(rm.img, rm.x, rm.y, rm.width, rm.height);
-        if (detectCollision(persoActuel, rm)) {
+        let rmHb = { x: rm.x + 15, y: rm.y + 10, width: rm.width - 30, height: rm.height - 15 };
+        if (detectCollision(persoActuel, rmHb)) {
             gameOver = true;
-            clearTimeout(obstacleInterval); // ✅ stoppe les obstacles
+            clearTimeout(obstacleInterval);
         }
     }
 
@@ -177,7 +203,7 @@ function update() {
         context.drawImage(ballon.img, ballon.x, ballon.y, ballon.width, ballon.height);
         if (detectCollision(persoActuel, ballon)) {
             gameOver = true;
-            clearTimeout(obstacleInterval); // ✅ stoppe les obstacles
+            clearTimeout(obstacleInterval);
         }
     }
 
@@ -200,14 +226,14 @@ function scheduleObstacle(placeFn) {
 
 function placeRm() {
     if (gameOver) { return; }
-    let rm = { img: rm1Img, x: rmX, y: rmY, width: rm1Width, height: rmHeight };
+    let rm = { img: rm1Img, x: rmX, y: rmY, width: rm1Width, height: rmHeight, hbOffsetX: 15, hbOffsetY: 10, hbWidth: rm1Width - 30, hbHeight: rmHeight - 15 };
     rmArray.push(rm);
     if (rmArray.length > 5) { rmArray.shift(); }
 }
 
 function placeBallon() {
     if (gameOver) { return; }
-    let ballon = { img: ballonImg, x: boardWidth, y: persoY - 20, width: ballonWidth, height: ballonHeight, velocityX: velocityX };
+    let ballon = { img: ballonImg, x: boardWidth, y: persoY - 35, width: ballonWidth, height: ballonHeight, velocityX: velocityX };
     ballonArray.push(ballon);
     if (ballonArray.length > 5) { ballonArray.shift(); }
 }

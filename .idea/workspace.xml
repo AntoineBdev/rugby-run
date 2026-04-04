@@ -4,10 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="25d51bde-4895-41a8-86e4-6c0019bfc3db" name="Changes" comment="Fix bug glissade&#10;Touche fleche plus logique">
+    <list default="true" id="25d51bde-4895-41a8-86e4-6c0019bfc3db" name="Changes" comment="Niveaux tutos : lvl1 saut seul, lvl2 glissade seule, lvl3 les deux                                                                 &#10;  - startGame délègue à startLevel1/2/3                                                                                                       &#10;  - placeObstacle splittée en placeRm / placeBallon / placeMix&#10;  - scheduleObstacle prend placeFn en paramètre                                                                                               &#10;  - vitesse identique sur tous les niveaux&#10;  - fix Escape (preventDefault) + instructions clavier corrigées">
+      <change afterPath="$PROJECT_DIR$/project/DivingPlayer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/JumpingPlayer.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/StadeBG.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/level1.html" beforeDir="false" afterPath="$PROJECT_DIR$/project/level1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/CM - Git.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Gemini_Generated_Image_kgbkmbkgbkmbkgbk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/proto.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/project/menu.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/perso.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/plonge.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/rm1.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/project/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/project/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/project/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +68,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/project" />
       <recent name="$PROJECT_DIR$/docs" />
     </key>
   </component>
@@ -85,7 +96,7 @@
       <updated>1774361039160</updated>
       <workItem from="1774361040197" duration="8000" />
       <workItem from="1774722930872" duration="53000" />
-      <workItem from="1774878540566" duration="6944000" />
+      <workItem from="1774878540566" duration="19300000" />
     </task>
     <task id="LOCAL-00002" summary="Fix bug glissade&#10;Touche fleche plus logique">
       <option name="closed" value="true" />
@@ -103,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774883891730</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Niveaux tutos : lvl1 saut seul, lvl2 glissade seule, lvl3 les deux                                                                 &#10;  - startGame délègue à startLevel1/2/3                                                                                                       &#10;  - placeObstacle splittée en placeRm / placeBallon / placeMix&#10;  - scheduleObstacle prend placeFn en paramètre                                                                                               &#10;  - vitesse identique sur tous les niveaux&#10;  - fix Escape (preventDefault) + instructions clavier corrigées">
+      <option name="closed" value="true" />
+      <created>1774889026236</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1774889026236</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,6 +131,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test" />
     <MESSAGE value="Fix bug glissade&#10;Touche fleche plus logique" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix bug glissade&#10;Touche fleche plus logique" />
+    <MESSAGE value="Niveaux tutos : lvl1 saut seul, lvl2 glissade seule, lvl3 les deux                                                                 &#10;  - startGame délègue à startLevel1/2/3                                                                                                       &#10;  - placeObstacle splittée en placeRm / placeBallon / placeMix&#10;  - scheduleObstacle prend placeFn en paramètre                                                                                               &#10;  - vitesse identique sur tous les niveaux&#10;  - fix Escape (preventDefault) + instructions clavier corrigées" />
+    <option name="LAST_COMMIT_MESSAGE" value="Niveaux tutos : lvl1 saut seul, lvl2 glissade seule, lvl3 les deux                                                                 &#10;  - startGame délègue à startLevel1/2/3                                                                                                       &#10;  - placeObstacle splittée en placeRm / placeBallon / placeMix&#10;  - scheduleObstacle prend placeFn en paramètre                                                                                               &#10;  - vitesse identique sur tous les niveaux&#10;  - fix Escape (preventDefault) + instructions clavier corrigées" />
   </component>
 </project>
