@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Jump Rugby</title>
+    <title>Rugby Run</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="menu">
-        <h1>🏉 JUMP RUGBY</h1>
-        <p>Choisis ton niveau :</p>
-        <button class="btn-niveau facile" onclick="window.location.href='level1.html'">Niveau 1 - Saut</button>
-        <button class="btn-niveau moyen" onclick="window.location.href='level2.html'">Niveau 2 - Glissade</button>
-        <button class="btn-niveau difficile" onclick="window.location.href='level3.html'">Niveau 3 - Complet</button>
-        <p>Vitesse :</p>
+        <img src="logost.png" alt="Stade Toulousain" id="logo-st">
+        <h1>RUGBY RUN</h1>
+        <p>Choose your level:</p>
+        <button class="btn-niveau facile" onclick="window.location.href='level1.html'">Level 1 — Jump</button>
+        <button class="btn-niveau moyen" onclick="window.location.href='level2.html'">Level 2 — Slide</button>
+        <button class="btn-niveau difficile" onclick="window.location.href='level3.html'">Level 3 — Full</button>
+        <p>Speed:</p>
         <div id="vitesse-buttons">
-            <button class="btn-vitesse selected" onclick="setVelocite(this, -5)">1</button>
-            <button class="btn-vitesse" onclick="setVelocite(this, -8)">2</button>
-            <button class="btn-vitesse" onclick="setVelocite(this, -12)">3</button>
+            <button class="btn-vitesse selected" onclick="setVelocite(this, -5)">
+                <span class="club-logo"><img src="logo castres.png" alt="Castres"></span>
+                <span class="club-label">1 — Castres</span>
+            </button>
+            <button class="btn-vitesse" onclick="setVelocite(this, -8)">
+                <span class="club-logo"><img src="logo larochelle.png" alt="La Rochelle"></span>
+                <span class="club-label">2 — La Rochelle</span>
+            </button>
+            <button class="btn-vitesse" onclick="setVelocite(this, -12)">
+                <span class="club-logo"><img src="logo bordeaux.png" alt="Bordeaux"></span>
+                <span class="club-label">3 — Bordeaux</span>
+            </button>
         </div>
     </div>
     <script src="script.js"></script>

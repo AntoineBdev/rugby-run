@@ -6,36 +6,32 @@ let context;
 let terrainImg;
 let bgX = 0;
 
-// perso
+// player
 let persoWidth = 88;
 let persoHeight = 94;
-let persoX = 50;
 let persoY = boardHeight - persoHeight;
 let persoRunImg1, persoRunImg2, persoJumpImg, persoDiveImg;
 let runFrame = 0;
 let runTimer = 0;
 
 let perso = {
-    x: persoX,
+    x: 50,
     y: persoY,
     width: persoWidth,
     height: persoHeight
 }
 
-// états du perso
+// player state
 let isSauting = false;
 let isPlonging = false;
-let plongeTimer = 0;
 
 // rugbyman
 let rmArray = [];
 let rm1Width = 70;
 let rmHeight = 100;
-let rmX = boardWidth;
-let rmY = boardHeight - rmHeight;
 let rm1Img;
 
-// ballon
+// ball
 let ballonArray = [];
 let ballonWidth = 60;
 let ballonHeight = 40;
@@ -48,7 +44,7 @@ let gravity = .4;
 let gameOver = false;
 let score = 0;
 let obstacleInterval = null;
-let animationId = null; // ✅ pour stopper requestAnimationFrame
+let animationId = null;
 
 function startGame(niveau) {
     board = document.getElementById("board");
@@ -69,6 +65,9 @@ function startGame(niveau) {
     if (v === -5)      rm1Img.src = "CastreRB.png";
     else if (v === -8) rm1Img.src = "LarochelleRM.png";
     else               rm1Img.src = "BordeauBG.png";
+
+    let btnReplay = document.getElementById("btn-replay");
+    if (btnReplay) btnReplay.style.display = "none";
 
     resetGame();
     if (obstacleInterval) { clearTimeout(obstacleInterval); }
@@ -95,7 +94,6 @@ function resetGame() {
     velocityY = 0;
     isSauting = false;
     isPlonging = false;
-    plongeTimer = 0;
     runFrame = 0;
     runTimer = 0;
     bgX = 0;
@@ -140,10 +138,10 @@ function update() {
         context.fillText("GAME OVER", boardWidth / 2 - 100, boardHeight / 2);
         context.fillStyle = "white";
         context.font = "20px courier";
-        context.fillText("Score : " + Math.floor(score / 10), boardWidth / 2 - 70, boardHeight / 2 + 40);
+        context.fillText("Score: " + Math.floor(score / 10), boardWidth / 2 - 60, boardHeight / 2 + 40);
         context.fillStyle = "yellow";
         context.font = "16px courier";
-        context.fillText("ECHAP pour revenir au menu", boardWidth / 2 - 120, boardHeight / 2 + 75);
+        context.fillText("Press ESC to return to menu", boardWidth / 2 - 130, boardHeight / 2 + 75);
         return;
     }
 
@@ -153,7 +151,6 @@ function update() {
     context.drawImage(terrainImg, bgX, 0, 2000, boardHeight);
     context.drawImage(terrainImg, bgX + 2000, 0, 2000, boardHeight);
 
-    // saut
     if (isSauting) {
         velocityY += gravity;
         perso.y = Math.min(perso.y + velocityY, persoY);
@@ -163,7 +160,6 @@ function update() {
         }
     }
 
-    // dessin perso
     if (isPlonging) {
         context.drawImage(persoDiveImg, perso.x, boardHeight - 42, 113, 42);
     } else if (isSauting) {
@@ -174,7 +170,6 @@ function update() {
         context.drawImage(runFrame === 0 ? persoRunImg1 : persoRunImg2, perso.x, perso.y, perso.width, perso.height);
     }
 
-    // hitbox perso selon état
     let persoActuel;
     if (isPlonging) {
         persoActuel = { x: perso.x, y: boardHeight - 42, width: 113, height: 42 };
@@ -184,7 +179,6 @@ function update() {
         persoActuel = { x: perso.x, y: perso.y, width: perso.width, height: perso.height };
     }
 
-    // rugbymen
     for (let i = 0; i < rmArray.length; i++) {
         let rm = rmArray[i];
         rm.x += velocityX;
@@ -193,10 +187,11 @@ function update() {
         if (detectCollision(persoActuel, rmHb)) {
             gameOver = true;
             clearTimeout(obstacleInterval);
+            let btnReplay = document.getElementById("btn-replay");
+            if (btnReplay) btnReplay.style.display = "inline-block";
         }
     }
 
-    // ballons
     for (let i = 0; i < ballonArray.length; i++) {
         let ballon = ballonArray[i];
         ballon.x += ballon.velocityX;
@@ -204,14 +199,15 @@ function update() {
         if (detectCollision(persoActuel, ballon)) {
             gameOver = true;
             clearTimeout(obstacleInterval);
+            let btnReplay = document.getElementById("btn-replay");
+            if (btnReplay) btnReplay.style.display = "inline-block";
         }
     }
 
-    // score
-    context.fillStyle = "black";
+    context.fillStyle = "white";
     context.font = "20px courier";
     score++;
-    context.fillText("Score : " + Math.floor(score / 10), 5, 20);
+    context.fillText("Score: " + Math.floor(score / 10), 5, 20);
 }
 
 function scheduleObstacle(placeFn) {
@@ -226,7 +222,7 @@ function scheduleObstacle(placeFn) {
 
 function placeRm() {
     if (gameOver) { return; }
-    let rm = { img: rm1Img, x: rmX, y: rmY, width: rm1Width, height: rmHeight, hbOffsetX: 15, hbOffsetY: 10, hbWidth: rm1Width - 30, hbHeight: rmHeight - 15 };
+    let rm = { img: rm1Img, x: boardWidth, y: boardHeight - rmHeight, width: rm1Width, height: rmHeight };
     rmArray.push(rm);
     if (rmArray.length > 5) { rmArray.shift(); }
 }

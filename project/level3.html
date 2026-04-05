@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Niveau 3 - Difficile</title>
+    <title>Level 3 - Full</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="gameContainer">
         <canvas id="board"></canvas>
-        <p id="instructions">↑ = sauter &nbsp;|&nbsp; ↓ = plonger &nbsp;|&nbsp; ÉCHAP = menu</p>
+        <p id="instructions">↑ = jump &nbsp;|&nbsp; ↓ = slide &nbsp;|&nbsp; ESC = menu</p>
+        <button id="btn-replay" class="btn-replay" style="display:none" onclick="startGame(3)">▶ Play Again</button>
         <button class="btn-menu" onclick="window.location.href='menu.html'">⬅ Menu</button>
     </div>
     <script src="script.js"></script>
