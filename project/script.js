@@ -106,7 +106,7 @@ function handleKey(e) {
             clearTimeout(obstacleInterval);
             cancelAnimationFrame(animationId);
             document.removeEventListener("keydown", handleKey);
-            window.location.href = "menu.html";
+            window.location.href = "index.html";
         }
         return;
     }
