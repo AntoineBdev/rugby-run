@@ -63,7 +63,7 @@ function startGame(niveau) {
     velocityX = v;
     rm1Img = new Image();
     if (v === -5)      rm1Img.src = "CastreRB.png";
-    else if (v === -8) rm1Img.src = "LarochelleRM.png";
+    else if (v === -8) rm1Img.src = "LaRochelleRB.png";
     else               rm1Img.src = "BordeauBG.png";
 
     let btnReplay = document.getElementById("btn-replay");
