@@ -1,5 +1,7 @@
 # Rugby Run
 
+🕹️ **Play here:** https://rugby-run.vercel.app
+
 A 2D endless runner built with HTML5 Canvas and vanilla JavaScript. Dodge incoming rugby players and flying balls to survive as long as possible.
 
 ## How to play
